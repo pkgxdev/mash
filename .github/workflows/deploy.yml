@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  trawl:
+  build:
     defaults:
       run:
         working-directory: out
@@ -21,6 +21,7 @@ jobs:
       - run: ../.github/scripts/trawl.ts
         env:
           GH_TOKEN: ${{ github.token }}
+
       - run: ../.github/scripts/index.ts > index.json
 
       # safe to handle multiple forks but this is not supported and the metadata will not be merged
@@ -39,5 +40,16 @@ jobs:
       - uses: actions/upload-pages-artifact@v2
         with:
           path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    steps:
       - uses: actions/deploy-pages@v2
         id: deployment
