@@ -18,8 +18,8 @@ jobs:
       - run: mkdir out
         working-directory: ${{ github.workspace }}
 
-      - run: .github/scripts/trawl.ts
-      - run: .github/scripts/index.ts > index.json
+      - run: ../.github/scripts/trawl.ts
+      - run: ../.github/scripts/index.ts > index.json
 
       # safe to handle multiple forks but this is not supported and the metadata will not be merged
       - run: |
