@@ -1,0 +1,39 @@
+on:
+  pull_request:
+    paths:
+      - .github/workflows/deploy.yml
+  workflow_dispatch:
+
+jobs:
+  trawl:
+    defaults:
+      run:
+        working-directory: out
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pkgxdev/setup@v2
+
+      # apparently the GitHub Actions team don’t optimize for DX
+      - run: mkdir out
+        working-directory: ${{ github.workspace }}
+
+      - run: .github/scripts/trawl.ts
+      - run: .github/scripts/index.ts > index.json
+
+      # safe to handle multiple forks but this is not supported and the metadata will not be merged
+      - run: |
+          for x in *; do
+            cd $x
+            mv */scripts/* .
+            mv */metadata.json .
+            find -type d -depth 1 | xargs rm -rf
+            cd ..
+          done
+
+      - uses: actions/configure-pages@v3
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: out
+      - uses: actions/deploy-pages@v2
+        id: deployment
