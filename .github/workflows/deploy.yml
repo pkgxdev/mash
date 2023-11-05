@@ -1,0 +1,53 @@
+on:
+  push:
+    branches: main
+    paths:
+      - .github/workflows/deploy.yml
+      - .github/scripts/*
+  pull_request:
+    paths:
+      - .github/workflows/deploy.yml
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.repository == 'pkgxdev/mash'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pkgxdev/setup@v2
+
+      - run: .github/scripts/trawl.ts --out ./build
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - run: |
+          mkdir out
+          .github/scripts/index.ts --input ./build > ./out/index.json
+
+      - run: .github/scripts/build.ts --input ./build --output ./out --index-json ./out/index.json
+
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
