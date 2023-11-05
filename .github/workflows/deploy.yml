@@ -19,6 +19,8 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - run: ../.github/scripts/trawl.ts
+        env:
+          GH_TOKEN: ${{ github.token }}
       - run: ../.github/scripts/index.ts > index.json
 
       # safe to handle multiple forks but this is not supported and the metadata will not be merged
