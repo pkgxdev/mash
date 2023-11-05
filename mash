@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+if [ -n "$RUNNER_DEBUG" -a -n "$GITHUB_ACTIONS" ] || [ -n "$VERBOSE" ]; then
+  set -x
+fi
+
+if ! command -v pkgx >/dev/null; then
+  echo "error: pkgx not found" 1>&2
+  exit 1
+fi
+if ! command -v curl >/dev/null; then
+  curl() {
+    pkgx curl "$@"
+  }
+fi
+
+run() {
+  SCRIPTNAME=$1
+  shift
+
+  if [ "$(uname)" = Darwin ]; then
+    CACHE="${XDG_CACHE_HOME:-$HOME/Library/Caches}/mash/$SCRIPTNAME"
+  else
+    CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/mash/$SCRIPTNAME"
+  fi
+
+  get_etag() {
+    grep -i ETag "$CACHE/headers.txt" | sed -e 's/ETag: "\(.*\)"/\1/I' | tr -d '\r'
+  }
+
+  if [ -f "$CACHE/headers.txt" ] && ETAG=$(get_etag); then
+    ETAG=(--header If-None-Match:\ $ETAG)
+  else
+    mkdir -p "$CACHE"
+  fi
+
+  URL="https://pkgxdev.github.io/mash/$SCRIPTNAME"
+
+  if curl \
+      "${ETAG[@]}" \
+      --silent \
+      --fail \
+      --show-error \
+      --dump-header "$CACHE/headers.txt" \
+      --output "$CACHE/script" \
+      "$URL"
+  then
+    chmod +x "$CACHE/script"
+    exec "$CACHE/script" "$@"
+  elif [ -f "$CACHE/script" ]; then
+    echo "warn: couldn’t update check" 1>&2
+    exec "$CACHE/script" "$@"
+  else
+    echo "error: $URL" 1>&2
+    exit 2
+  fi
+
+}
+
+if [ -z "$1" ]; then
+  curl -Ssf https://pkgxdev.github.io/mash/ | pkgx jq '.categories[]' --raw-output | sort | uniq
+  exit 0
+elif [[ "$1" == *"/"* ]]; then
+  # fully quaified name not a category
+  cmd=$1
+  shift
+  run u/$cmd "$@"
+elif [[ -z "$2" ]]; then
+  curl -Ssf https://pkgxdev.github.io/mash/$1/ |
+    pkgx jq -r '.scripts[] | [.cmd, .description] | @tsv' |
+    awk 'BEGIN {FS="\t"; print "| Script | Description |"; print "|-|-|"} {printf("| %s | %s |\n", $1, $2)}' |
+    pkgx gum format
+else
+  cmd=$1/$2
+  shift; shift
+  run $cmd "$@"
+fi
