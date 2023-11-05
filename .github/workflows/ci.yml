@@ -1,0 +1,12 @@
+on:
+  pull_request:
+    paths: mash
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pkgxdev/setup@v2
+      - run: ./mash pkgxdev/demo
+      - run: ./mash pkgxdev/demo   # check cache route works too
