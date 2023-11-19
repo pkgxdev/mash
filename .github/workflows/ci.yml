@@ -1,0 +1,12 @@
+on:
+  pull_request:
+    paths: shub.sh
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pkgxdev/setup@v2
+      - run: ./shub.sh pkgxdev/demo
+      - run: ./shub.sh pkgxdev/demo   # check cache route works too
