@@ -10,7 +10,7 @@ SCRIPTNAME=$1
 shift
 
 if [ -z "$SCRIPTNAME" ]; then
-  echo "usage: shx <scriptname> [args…]" 1>&2
+  echo "usage: mash <scriptname> [args…]" 1>&2
   exit 64
 fi
 

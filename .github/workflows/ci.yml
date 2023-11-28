@@ -1,6 +1,6 @@
 on:
   pull_request:
-    paths: hubx.sh
+    paths: mash
 
 jobs:
   test:
@@ -8,5 +8,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pkgxdev/setup@v2
-      - run: ./hubx.sh pkgxdev/demo
-      - run: ./hubx.sh pkgxdev/demo   # check cache route works too
+      - run: ./mash pkgxdev/demo
+      - run: ./mash pkgxdev/demo   # check cache route works too
