@@ -17,7 +17,6 @@ Deno.chdir(outdir);
 const rv: Script[] = []
 for await (const slug of iterateGitRepos('.')) {
   if (slug == 'pkgxdev/mash') continue
-  if (slug.endsWith('/demo')) continue
   console.error(`iterating: ${slug}`);
   rv.push(...await get_metadata(slug));
 }
@@ -112,7 +111,9 @@ async function get_metadata(slug: string) {
       // const excerpt = (await Deno.readTextFile(filename)).split("\n").slice(0, 5).join("\n")
       const url = repo_metadata.url +'/scripts/' + basename(filename)
 
-      rv.push({ fullname, birthtime, description, avatar, url })
+      if (!fullname.endsWith('/demo')) {
+        rv.push({ fullname, birthtime, description, avatar, url })
+      }
     }
   }
 
