@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.repository == 'pkgxdev/scripthub'
+    if: github.repository == 'pkgxdev/mash'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
       # deploys slowly. There’s no fix without switching to using a branch for gh-pages
       # or another deployment solution altogether. NOTE we want to do one or both in the near future.
       - run: |
-          curl -LfO https://pkgxdev.github.io/scripthub/api.json
+          curl -LfO https://pkgxdev.github.io/mash/api.json
           .github/scripts/api.ts --current-api-json ./api.json --index-json ./out/index.json > out/api.json
 
       - run: .github/scripts/redirects.ts --out ./out --api-json ./out/api.json

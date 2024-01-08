@@ -54,9 +54,9 @@ async function clone({clone_url, full_name, ...fork}: any) {
   }
 }
 
-await cloneAllForks('pkgxdev', 'scripthub');
+await cloneAllForks('pkgxdev', 'mash');
 
 // we have some general utility scripts here
-await clone({clone_url: 'https://github.com/pkgxdev/scripthub.git', full_name: 'pkgxdev/scripthub'});
+await clone({clone_url: 'https://github.com/pkgxdev/mash.git', full_name: 'pkgxdev/mash'});
 // deploy expects this and fails otherwise
-Deno.writeTextFileSync(`${outdir}/pkgxdev/scripthub/metadata.json`, '{}')
+Deno.writeTextFileSync(`${outdir}/pkgxdev/mash/metadata.json`, '{}')

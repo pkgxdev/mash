@@ -16,7 +16,8 @@ Deno.chdir(outdir);
 
 const rv: Script[] = []
 for await (const slug of iterateGitRepos('.')) {
-  if (slug == 'pkgxdev/scripthub') continue
+  if (slug == 'pkgxdev/mash') continue
+  if (slug.endsWith('/demo')) continue
   console.error(`iterating: ${slug}`);
   rv.push(...await get_metadata(slug));
 }
