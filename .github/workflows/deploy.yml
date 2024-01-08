@@ -52,7 +52,7 @@ jobs:
       - run: .github/scripts/redirects.ts --out ./out --api-json ./out/api.json
 
       - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v2
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: out
 
