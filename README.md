@@ -12,29 +12,6 @@ mash up millions of open source packages into monstrously powerful scripts.
 >
 > All scripts can be read in advance via [mash.pkgx.sh]
 
-## Getting Started
-
-```sh
-$ mash  # or https://mash.pkgx.sh
-# lists all script categories
-```
-
-You can browse script listings with the TUI or at [mash.pkgx.sh]:
-
-```sh
-$ mash ai  # or https://mash.pkgx.sh/ai/
-# lists all ai scripts
-```
-
-> [!NOTE]
-> The above lists all user submitted scripts in the `ai` category.
-
-Once you’ve found a script you want to run:
-
-```sh
-$ mash ai chat --help  # or https://mash.pkgx.sh/ai/chat/
-```
-
 ## Installing `mash`
 
 `mash` uses `pkgx` for packaging primitives so you may as well use `pkgx` to
@@ -60,6 +37,28 @@ So if you like you can just download it by itself.
 
 &nbsp;
 
+## Getting Started
+
+```sh
+$ mash  # or https://mash.pkgx.sh
+# lists all script categories
+```
+
+You can browse script listings with the TUI or at [mash.pkgx.sh]:
+
+```sh
+$ mash ai  # or https://mash.pkgx.sh/ai/
+# lists all ai scripts
+```
+
+> [!NOTE]
+> The above lists all user submitted scripts in the `ai` category.
+
+Once you’ve found a script you want to run:
+
+```sh
+$ mash ai chat --help  # or https://mash.pkgx.sh/ai/chat/
+```
 
 ## Contributing Scripts
 
@@ -85,7 +84,7 @@ So if you like you can just download it by itself.
 scripts must be categorized or namespaced with your user.
 
 Thus if you add a script named `foo` it can only be used via
-`mash username/foo`. But if you add a script called `foo-bar` if will be
+`mash username/foo`. But if you add a script called `foo-bar` it will be
 listed if a user types `mash foo`:
 
 ```sh
@@ -98,15 +97,15 @@ mash foo other-script  # …
 To use the script the user would type `mash foo bar` or alternatively
 `mash youruser/foo-bar`.
 
-> [!NOTE]
-> Categorized scripts occur on a first come first served basis. If you create
-> a script called `foo-bar` and someone already did that then you are too late
-> and users can only call your script with `mash youruser/foo-bar`.
-
 > [!IMPORTANT]
 > `mash` will not be able to run your script until it is indexed.
 > If you can see it listed at [mash.pkgx.sh] then you’re indexed.
 > We index a few times an hour via the GitHub Actions committed to this repo.
+
+> [!NOTE]
+> Categorized scripts occur on a first come first served basis. If you create
+> a script called `foo-bar` and someone already did that then you are too late
+> and users can only call your script with `mash youruser/foo-bar`.
 
 > [!NOTE]
 > Updates are fetched automatically, there is no versioning at this time.
