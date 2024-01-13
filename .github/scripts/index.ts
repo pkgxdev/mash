@@ -3,6 +3,7 @@
 import { join, basename, dirname } from "https://deno.land/std@0.206.0/path/mod.ts";
 import { walk, exists } from "https://deno.land/std@0.206.0/fs/mod.ts";
 import * as flags from "https://deno.land/std@0.206.0/flags/mod.ts";
+import { Path } from "https://deno.land/x/libpkgx@v0.16/mod.ts";
 
 if (import.meta.main) {
   const args = flags.parse(Deno.args);
@@ -72,7 +73,7 @@ async function extractMarkdownSection(filePath: string, sectionTitle: string): P
 }
 
 export interface Script {
-  fullname: string
+  fullname: string  // the fully qualified name eg. user/category-script-name
   birthtime: Date
   description?: string
   avatar: string
@@ -129,14 +130,19 @@ async function get_metadata(slug: string) {
 
       const repo_metadata = JSON.parse(await Deno.readTextFile(join(slug, 'metadata.json')))
 
-      const README = await extractMarkdownSection(join(slug, 'README.md'), basename(filename));
+      const _stem = stem(filename).join('.')
+      const README = await extractMarkdownSection(join(slug, 'README.md'), _stem);
       const birthtime = new Date(currentCommitDate!);
       const avatar = repo_metadata.avatar
-      const fullname = join(dirname(slug), ...stem(filename))
+      const fullname = join(dirname(slug), _stem)
       const url = repo_metadata.url +'/scripts/' + basename(filename)
       const category = (([x, y]) => x?.length > 0 && y ? x : undefined)(basename(filename).split("-"))
-      const description = README ? extract_description(README) : undefined
-      const cmd = category ? `mash ${category} ${basename(filename).split('-').slice(1).join('-')}` : `mash ${fullname}`
+      const description = README
+        ? extract_description(README)
+        : slug == 'pkgxdev/demo-test-pattern'
+          ? 'Prints a test pattern to your console'
+          : undefined
+      const cmd = category ? `mash ${category} ${_stem.split('-').slice(1).join('-')}` : `mash ${fullname}`
 
       rv.push({ fullname, birthtime, description, avatar, url, category, README, cmd })
     }

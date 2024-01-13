@@ -12,30 +12,8 @@ mash up millions of open source packages into monstrously powerful scripts.
 >
 > All scripts can be read in advance via [mash.pkgx.sh]
 
-## Installing `mash`
-
-`mash` uses `pkgx` for packaging primitives so you may as well use `pkgx` to
-run `mash`:
-
-```sh
-$ pkgx mash
-
-# or install it via pkgx:
-$ pkgx install mash
-$ mash
-```
-
-> [!TIP]
-> `curl https://pkgx.sh | sh` or see https://pkgx.sh
-
-`mash` is a plain POSIX script. All it needs is `bash`, `curl`, and `pkgx`.
-So if you like you can just download it by itself.
-
-> [!NOTE]
-> Keeping mash so minimal isn’t a design choice. We will entertain rewriting
-> it in something better for dev as it gets more complicated.
-
 &nbsp;
+
 
 ## Getting Started
 
@@ -60,6 +38,37 @@ Once you’ve found a script you want to run:
 $ mash ai chat --help  # or https://mash.pkgx.sh/ai/chat/
 ```
 
+## Installing `mash`
+
+`mash` uses `pkgx` for packaging primitives so you may as well use `pkgx` to
+run `mash`:
+
+```sh
+$ pkgx mash
+
+# or install it via pkgx:
+$ pkgx install mash
+$ mash
+```
+
+> [!TIP]
+> * `brew install pkgxdev/made/pkgx`; or
+> * `curl https://pkgx.sh | sh`; or
+> * [docs.pkgx.sh/getting-started](https://docs.pkgx.sh/getting-started)
+
+`mash` is a plain POSIX script. All it needs is `bash`, `curl`, and `pkgx`.
+So if you like you can just download it by itself.
+
+> [!NOTE]
+> Keeping mash so minimal isn’t a concrete design choice. We will entertain
+> rewriting it in something better for dev as it gets more complicated.
+>
+> In fact the minimalist nature of `mash` is more a testament to `pkgx`’s
+> powerful and composable packaging primitives.
+
+&nbsp;
+
+
 ## Contributing Scripts
 
 ### Making your Scripts available to `mash`
@@ -73,6 +82,8 @@ $ mash ai chat --help  # or https://mash.pkgx.sh/ai/chat/
 > * Use any shell or scripting language you like
 > * Scripts do not need to use a [`pkgx` shebang] *but we recommend it*
 > * Scripts do not have to be made executable *but we recommend it*
+> * Extensions will be stripped from the mash execution name, eg. `foo-bar.ts` is
+>   invoked via `mash foo bar` and not `mash foo bar.ts`
 
 > [!NOTE]
 > Do not create a pull request for your scripts against this repo!
@@ -84,7 +95,7 @@ $ mash ai chat --help  # or https://mash.pkgx.sh/ai/chat/
 scripts must be categorized or namespaced with your user.
 
 Thus if you add a script named `foo` it can only be used via
-`mash username/foo`. But if you add a script called `foo-bar` it will be
+`mash username/foo`. But if you add a script called `foo-bar` if will be
 listed if a user types `mash foo`:
 
 ```sh
