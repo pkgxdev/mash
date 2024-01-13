@@ -8,5 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pkgxdev/setup@v2
-      - run: ./mash pkgxdev/demo
-      - run: ./mash pkgxdev/demo   # check cache route works too
+      - run: ./mash demo test-pattern
+      - run: ./mash demo test-pattern           # check cache route works too
+      - run: ./mash pkgxdev/demo-test-pattern   # check fully qualified

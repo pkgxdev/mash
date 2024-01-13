@@ -137,7 +137,11 @@ async function get_metadata(slug: string) {
       const fullname = join(dirname(slug), _stem)
       const url = repo_metadata.url +'/scripts/' + basename(filename)
       const category = (([x, y]) => x?.length > 0 && y ? x : undefined)(basename(filename).split("-"))
-      const description = README ? extract_description(README) : undefined
+      const description = README
+        ? extract_description(README)
+        : slug == 'pkgxdev/demo-test-pattern'
+          ? 'Prints a test pattern to your console'
+          : undefined
       const cmd = category ? `mash ${category} ${_stem.split('-').slice(1).join('-')}` : `mash ${fullname}`
 
       rv.push({ fullname, birthtime, description, avatar, url, category, README, cmd })
