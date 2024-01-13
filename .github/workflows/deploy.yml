@@ -23,15 +23,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pkgxdev/setup@v2
 
-      - run: .github/scripts/trawl.ts --out ./build
+      - name: trawl
+        run: .github/scripts/trawl.ts --out ./build
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - run: |
+      - name: index
+        run: |
           mkdir out
           .github/scripts/index.ts --input ./build > ./out/index.json
 
-      - run: .github/scripts/build.ts --input ./build --output ./out --index-json ./out/index.json
+      - name: build
+        run: .github/scripts/build.ts --input ./build --output ./out --index-json ./out/index.json
 
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3

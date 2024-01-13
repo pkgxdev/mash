@@ -1,5 +1,6 @@
 #!/usr/bin/env -S pkgx deno run --allow-read --allow-write
 
+import { basename } from "https://deno.land/std@0.206.0/path/mod.ts";
 import * as flags from "https://deno.land/std@0.206.0/flags/mod.ts";
 import { Path } from "https://deno.land/x/libpkgx@v0.16.0/mod.ts";
 import { Script } from "./index.ts";
@@ -54,11 +55,11 @@ for (const script of scripts) {
   const [user, name] = script.fullname.split('/')
   const { category } = script
   const gh_slug = new URL(script.url).pathname.split('/').slice(1, 3).join('/')
-  const infile = indir.join(gh_slug, 'scripts', name)
+  const infile = indir.join(gh_slug, 'scripts', basename(script.url))
 
-  infile.cp({ into: outdir.join('u', user).mkdir('p') })
+  infile.cp({ to: outdir.join('u', user).mkdir('p').join(name) })
 
-  const leaf = infile.basename().split('-').slice(1).join('-')
+  const leaf = name.split('-').slice(1).join('-')
   if (category && !outdir.join(category, leaf).exists()) { // not already snagged
     infile.cp({ to: outdir.join(category, leaf) })
   }

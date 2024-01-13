@@ -82,6 +82,8 @@ So if you like you can just download it by itself.
 > * Use any shell or scripting language you like
 > * Scripts do not need to use a [`pkgx` shebang] *but we recommend it*
 > * Scripts do not have to be made executable *but we recommend it*
+> * Extensions will be stripped from the mash execution name, eg. `foo-bar.ts` is
+>   invoked via `mash foo bar` and not `mash foo bar.ts`
 
 > [!NOTE]
 > Do not create a pull request for your scripts against this repo!
