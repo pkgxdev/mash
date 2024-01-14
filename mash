@@ -2,14 +2,29 @@
 
 set -eo pipefail
 
+# Logging and error functions
+log() {
+  if [ "$VERBOSE" = 1 ]; then
+    echo "[$(date +"%Y-%m-%d %H:%M:%S")] $1"
+  fi
+}
+
+error() {
+  echo "[$(date +"%Y-%m-%d %H:%M:%S")] ERROR: $1" >&2
+}
+
+# Enable verbose mode if VERBOSE environment variable is set
 if [ -n "$RUNNER_DEBUG" -a -n "$GITHUB_ACTIONS" ] || [ -n "$VERBOSE" ]; then
   set -x
+  VERBOSE=1
 fi
 
+# Check for required commands
 if ! command -v pkgx >/dev/null; then
-  echo "error: pkgx not found" 1>&2
+  error "pkgx not found. Please install pkgx to continue."
   exit 1
 fi
+
 if ! command -v curl >/dev/null; then
   curl() {
     pkgx curl "$@"
@@ -20,24 +35,29 @@ run() {
   SCRIPTNAME=$1
   shift
 
+  # Determine cache location based on OS
   if [ "$(uname)" = Darwin ]; then
     CACHE="${XDG_CACHE_HOME:-$HOME/Library/Caches}/mash/$SCRIPTNAME"
   else
     CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/mash/$SCRIPTNAME"
   fi
 
+  # Function to get the ETag from the cache
   get_etag() {
     grep -i ETag "$CACHE/headers.txt" | sed -e 's/ETag: "\(.*\)"/\1/I' | tr -d '\r'
   }
 
+  # Check for cached ETag
   if [ -f "$CACHE/headers.txt" ] && ETAG=$(get_etag); then
     ETAG=(--header If-None-Match:\ $ETAG)
   else
     mkdir -p "$CACHE"
   fi
 
+  # Set the URL for the script
   URL="https://pkgxdev.github.io/mash/$SCRIPTNAME"
 
+  # Attempt to download and execute the script
   if curl \
       "${ETAG[@]}" \
       --silent \
@@ -50,29 +70,32 @@ run() {
     chmod +x "$CACHE/script"
     exec "$CACHE/script" "$@"
   elif [ -f "$CACHE/script" ]; then
-    echo "warn: couldn’t update check" 1>&2
+    error "Warn: couldn’t update check. Running cached version."
     exec "$CACHE/script" "$@"
   else
-    echo "error: $URL" 1>&2
+    error "Error: Failed to download $URL. Please check your connection or the URL."
     exit 2
   fi
-
 }
 
+# Main script logic
 if [ -z "$1" ]; then
+  # List categories if no argument is provided
   curl -Ssf https://pkgxdev.github.io/mash/ | pkgx jq '.categories[]' --raw-output | sort | uniq
   exit 0
 elif [[ "$1" == *"/"* ]]; then
-  # fully quaified name not a category
+  # Handle fully qualified script names
   cmd=$1
   shift
   run u/$cmd "$@"
 elif [[ -z "$2" ]]; then
+  # List scripts in a specified category
   curl -Ssf https://pkgxdev.github.io/mash/$1/ |
     pkgx jq -r '.scripts[] | [.cmd, .description] | @tsv' |
     awk 'BEGIN {FS="\t"; print "| Script | Description |"; print "|-|-|"} {printf("| %s | %s |\n", $1, $2)}' |
     pkgx gum format
 else
+  # Run a specified script
   cmd=$1/$2
   shift; shift
   run $cmd "$@"
