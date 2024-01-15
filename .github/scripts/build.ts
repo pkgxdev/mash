@@ -1,6 +1,5 @@
 #!/usr/bin/env -S pkgx deno run --allow-read --allow-write
 
-
 import { basename } from "https://deno.land/std@0.206.0/path/mod.ts";
 import * as flags from "https://deno.land/std@0.206.0/flags/mod.ts";
 import { Path } from "https://deno.land/x/libpkgx@v0.16.0/mod.ts";
@@ -61,7 +60,6 @@ for (const script of scripts) {
   infile.cp({ to: outdir.join('u', user).mkdir('p').join(name) })
 
   const leaf = name.split('-').slice(1).join('-')
-
   if (category && !outdir.join(category, leaf).exists()) { // not already snagged
     infile.cp({ to: outdir.join(category, leaf) })
   }
