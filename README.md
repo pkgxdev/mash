@@ -109,15 +109,15 @@ mash foo other-script  # …
 To use the script the user would type `mash foo bar` or alternatively
 `mash youruser/foo-bar`.
 
-> [!NOTE]
-> Categorized scripts occur on a first come first served basis. If you create
-> a script called `foo-bar` and someone already did that then you are too late
-> and users can only call your script with `mash youruser/foo-bar`.
-
 > [!IMPORTANT]
 > `mash` will not be able to run your script until it is indexed.
 > If you can see it listed at [mash.pkgx.sh] then you’re indexed.
 > We index a few times an hour via the GitHub Actions committed to this repo.
+
+> [!NOTE]
+> Categorized scripts occur on a first come first served basis. If you create
+> a script called `foo-bar` and someone already did that then you are too late
+> and users can only call your script with `mash youruser/foo-bar`.
 
 > [!NOTE]
 > Updates are fetched automatically, there is no versioning at this time.
