@@ -3,7 +3,6 @@
 import { join, basename, dirname } from "https://deno.land/std@0.206.0/path/mod.ts";
 import { walk, exists } from "https://deno.land/std@0.206.0/fs/mod.ts";
 import * as flags from "https://deno.land/std@0.206.0/flags/mod.ts";
-import { Path } from "https://deno.land/x/libpkgx@v0.16/mod.ts";
 
 if (import.meta.main) {
   const args = flags.parse(Deno.args);
@@ -126,8 +125,6 @@ async function get_metadata(slug: string) {
         continue
       }
 
-      console.error(line)
-
       const repo_metadata = JSON.parse(await Deno.readTextFile(join(slug, 'metadata.json')))
 
       const _stem = stem(filename).join('.')
@@ -139,7 +136,7 @@ async function get_metadata(slug: string) {
       const category = (([x, y]) => x?.length > 0 && y ? x : undefined)(basename(filename).split("-"))
       const description = README
         ? extract_description(README)
-        : slug == 'pkgxdev/demo-test-pattern'
+        : fullname == 'pkgxdev/demo-test-pattern'
           ? 'Prints a test pattern to your console'
           : undefined
       const cmd = category ? `mash ${category} ${_stem.split('-').slice(1).join('-')}` : `mash ${fullname}`
