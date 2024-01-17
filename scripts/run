@@ -1,0 +1,37 @@
+#!/usr/bin/env -S pkgx +deno bash -eo pipefail
+
+eval "$(pkgx --shellcode)"
+
+get_parameters() {
+  deno run --allow-read --allow-env - <<EoTS
+    import { hooks } from 'https://deno.land/x/libpkgx@v0.16.0/mod.ts'
+
+    const pkg = '$1'
+    const entrypoint = await hooks.usePantry().project(pkg).yaml().then(x => x?.['entrypoint'])
+    if (!entrypoint) Deno.exit(1)
+    console.log(pkg, entrypoint)
+EoTS
+}
+
+get_keg() {
+  deno run --allow-read --allow-env - <<EoTS
+    import { hooks, semver } from 'https://deno.land/x/libpkgx@v0.16.0/mod.ts'
+    const pkg = {project: '$1', constraint: new semver.Range('*') }
+    const prefix = (await hooks.useCellar().resolve(pkg)).path.string
+    console.log(prefix)
+EoTS
+}
+
+pkg=$1
+shift
+
+# get project and entrypoint
+params=($(get_parameters $pkg))
+
+# install and add env
+env +${params[0]}
+
+cd "$(get_keg ${params[0]})"
+
+# run entrypoint
+exec "${params[@]:1}" "$@"
