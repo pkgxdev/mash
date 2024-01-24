@@ -20,6 +20,11 @@ run() {
   SCRIPTNAME=$1
   shift
 
+  # github won’t give us `github.com/pkgx` because they are meanies
+  if [[ $SCRIPTNAME == u/pkgx/* ]]; then
+    SCRIPTNAME="${SCRIPTNAME/pkgx/pkgxdev}"
+  fi
+
   if [ "$(uname)" = Darwin ]; then
     CACHE="${XDG_CACHE_HOME:-$HOME/Library/Caches}/mash/$SCRIPTNAME"
   else
