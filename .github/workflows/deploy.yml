@@ -4,6 +4,7 @@ on:
     paths:
       - .github/workflows/deploy.yml
       - .github/scripts/*
+      - scripts/*
   pull_request:
     paths:
       - .github/workflows/deploy.yml

@@ -1,3 +1,3 @@
 #!/usr/bin/env -S pkgx +mash bash
 
-exec mash pkgx/cache+ls "$@"
+exec mash pkgx/cache+upgrade "$@"

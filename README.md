@@ -128,6 +128,11 @@ To use the script the user would type `mash foo bar` or alternatively
 > letter category that you want an exception made, open a discussion and let’s
 > chat!
 
+> [!INFO]
+> ### Naming Guidelines: A Call for Consideration
+> Think for a little about the names you are picking. We reserve the right
+> to rename egregious abuse of names and namespaces.
+
 &nbsp;
 
 
