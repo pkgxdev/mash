@@ -1,7 +1,7 @@
 #!/usr/bin/env -S pkgx +mash bash
 
 usage() {
-  echo "usage: mash pkgx/cache <ls|upgrade>"
+  echo "usage: mash pkgx/cache <ls|upgrade|prune>"
 }
 
 cmd="$1"
@@ -10,7 +10,7 @@ shift
 case "$cmd" in
 neophile|neophilia|neophiliac)
   exec pkgx mash "pkgx/cache+upgrade" "$@";;
-ls|cache)
+ls|cache|prune)
   exec pkgx mash "pkgx/cache+$cmd" "$@";;
 --help)
   usage;;
