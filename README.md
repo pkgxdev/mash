@@ -40,10 +40,17 @@ $ mash ai chat --help  # or https://mash.pkgx.sh/ai/chat/
 
 ## Installing `mash`
 
-`mash` uses `pkgx` for packaging primitives so you may as well use `pkgx` to
-run `mash`:
+To install `mash` and `pkgx`:
 
 ```sh
+curl https://mash.pkgx.sh | sh
+# ^^ installs /usr/local/bin/mash and  /usr/local/bin/pkgx
+```
+
+If you prefer, you can run `mash` via `pkgx`:
+
+```sh
+$ brew install pkgxdev/made/pkgx  # or curl https://pkgx.sh | sh
 $ pkgx mash
 
 # or install it via pkgx:
@@ -211,12 +218,11 @@ $ bash ./stargazer
 # ^^ they will need to read the script to determine deps and interpreter
 ```
 
-Hackers can use your script without installing `pkgx` first via our cURL
-one-liner. This executes the script but doesn’t install pkgx or any other
-pkgs:
+Hackers can use your script without installing `pkgx` or `mash` first via our
+cURL one-liner. This executes the script but doesn’t install anything:
 
 ```sh
-sh <(curl https://pkgx.sh) mash your-script-name
+sh <(curl https://mash.pkgx.sh) <category> <scriptname>
 ```
 
 
