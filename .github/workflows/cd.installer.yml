@@ -1,7 +1,12 @@
 on:
+  pull_request:
+    paths:
+      - .github/workflows/cd.installer.yml
   push:
     branches: main
-    paths: installer.sh
+    paths:
+      - installer.sh
+      - .github/workflows/cd.installer.yml
 
 jobs:
   cd:
@@ -19,4 +24,4 @@ jobs:
 
       - run: aws cloudfront create-invalidation
           --distribution-id ${{ secrets.AWS_CF_DISTRIBUTION_ID }}
-          --paths /installer.sh
+          --paths / /installer.sh
