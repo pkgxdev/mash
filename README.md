@@ -78,26 +78,21 @@ So if you like you can just download it by itself.
 
 ## Contributing Scripts
 
-### Making your Scripts available to `mash`
+### Writing Scripts
 
-1. Fork [pkgxdev/mash]
-2. Add scripts to `./scripts/`
-3. Push to your fork
-4. Wait an hour and then check [mash.pkgx.sh]
+Use any shell or scripting language you like. You specify it with the shebang:
 
-> [!TIP]
-> * Use any shell or scripting language you like
-> * Scripts do not need to use a [`pkgx` shebang] *but we recommend it*
-> * Scripts do not have to be made executable *but we recommend it*
-> * Extensions (eg. `.bash`, `.ts`) are *recommended* for GitHub readability.
->   They will be stripped from the mash execution name, eg. `foo-bar.ts` is
->   invoked via `mash foo bar` and not `mash foo bar.ts`
+```sh
+#!/usr/bin/env -S pkgx ruby
+```
 
-> [!NOTE]
-> Do not create a pull request for your scripts against this repo!
-> *We index the fork graph*.
+Generally it is sensible to specify constrained versions:
 
-### Running Your Scripts
+```sh
+#!/usr/bin/env -S pkgx python@3.11
+```
+
+### Naming Scripts
 
 `mash` operates with a “categorization by default is good” philosophy. Your
 scripts must be categorized or namespaced with your user.
@@ -109,17 +104,79 @@ listed if a user types `mash foo`:
 ```sh
 $ mash foo
 
-mash foo bar           # your description about `foo bar` is shown here
-mash foo other-script  # …
+    mash foo bar           # your description about `foo bar` is shown here
+    mash foo other-script  # …
 ```
 
-To use the script the user would type `mash foo bar` or alternatively
-`mash youruser/foo-bar`.
+> [!TIP]
+> Extensions (eg. `.sh`, `.ts`) are *recommended* for GitHub readability.
+> They will be stripped from the mash execution name, eg. `foo-bar.ts` is
+> invoked via `mash foo bar` and not `mash foo bar.ts`
+
+### Installing Language Dependencies
+
+Many languages or interpreters nowadays provide clear methods for importing
+language dependencies inside scripts, eg. `deno`, or `bun`. Where unclear
+we document it here:
+
+#### Ruby
+
+Use [Bundler](https://bundler.io):
+
+```ruby
+#!/usr/bin/env -S pkgx ruby@3
+
+require 'bundler/inline'
+
+gemfile do
+  source 'https://rubygems.org'
+  gem 'ruby-macho', '~> 3'
+end
+```
+
+#### Python, Go, Rust, Node, etc.
+
+Typically for everything else, use [`scriptisto`], eg for Python:
+
+```python
+#!/usr/bin/env -S pkgx +python@3.12 +virtualenv scriptisto
+
+# snip… type `scriptisto new python-pip` for the rest.
+```
+
+Use `scriptisto new` for a full listing.
+
+
+### Making your scripts available to `mash`
+
+1. Fork [pkgxdev/mash]
+2. Add scripts to `./scripts/`
+3. Push to your fork
+4. Wait an hour and then check [mash.pkgx.sh]
+
+> [!NOTE]
+> Do not create a pull request for your scripts against this repo!
+> *We index the fork graph*.
+
+### Running Your Scripts
+
+Assuming a script named `foo-bar`, while debugging just:
+
+```sh
+$ chmod +x scripts/foo-bar
+$ ./scripts/foo-bar
+```
+
+After pushing we will index your script within 60 minutes.
+Once indexed your script can be run with:
+
+1. `mash foo bar`; or
+2. `mash your-username/foo-bar`
 
 > [!IMPORTANT]
 > `mash` will not be able to run your script until it is indexed.
-> If you can see it listed at [mash.pkgx.sh] then you’re indexed.
-> We index a few times an hour via the GitHub Actions committed to this repo.
+> If you can visit https://mash.pkgx.sh/USERNAME/SCRIPT-NAME then you’re
+> script has been indexed.
 
 > [!NOTE]
 > Categorized scripts occur on a first come first served basis. If you create
@@ -181,17 +238,8 @@ section. If your script is not globally categorized then you would do
 * If you add a `### Usage` section we’ll list it on the web
 
 > [!IMPORTANT]
-> If you don’t provide a description your script won’t be listed (but the
-> scripts can still be run by `mash`).
-
-### Debugging Scripts
-
-You can easily test your scripts before publishing:
-
-```sh
-$ chmod +x scripts/my-script
-$ scripts/my-script
-```
+> If you don’t provide a description your script won’t be listed on the
+> [mash frontpage][mash.pkgx.sh] (but the scripts can still be run by `mash`).
 
 ### Example Fork
 
@@ -230,3 +278,5 @@ sh <(curl https://mash.pkgx.sh) <category> <scriptname>
 [pkgxdev/mash]: https://github.com/pkgxdev/mash
 [`pkgx` shebang]: https://docs.pkgx.sh/scripts
 [`pkgx`]: https://pkgx.sh
+[`scriptisto`]: https://github.com/igor-petruk/scriptisto
+[actions]: https://github.com/pkgxdev/mash/actions
