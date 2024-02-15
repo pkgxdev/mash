@@ -10,7 +10,7 @@ shift
 case "$cmd" in
 neophile|neophilia|neophiliac)
   exec pkgx mash "pkgx/cache+upgrade" "$@";;
-ls|cache|prune)
+ls|upgrade|prune)
   exec pkgx mash "pkgx/cache+$cmd" "$@";;
 --help)
   usage;;

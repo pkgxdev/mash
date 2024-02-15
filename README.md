@@ -116,8 +116,8 @@ $ mash foo
 ### Installing Language Dependencies
 
 Many languages or interpreters nowadays provide clear methods for importing
-language dependencies inside scripts, eg. `deno`, or `bun`. Where unclear
-we document it here:
+language dependencies inside scripts, eg. `deno`, or `bun`. For other
+languages, read on.
 
 #### Ruby
 
@@ -144,19 +144,25 @@ Typically for everything else, use [`scriptisto`], eg for Python:
 # snip… type `scriptisto new python-pip` for the rest.
 ```
 
-Use `scriptisto new` for a full listing.
+Use `scriptisto new` for a full listing of platforms Scriptisto makes
+available.
 
 
 ### Making your scripts available to `mash`
 
 1. Fork [pkgxdev/mash]
 2. Add scripts to `./scripts/`
-3. Push to your fork
-4. Wait an hour and then check [mash.pkgx.sh]
+3. Optionally edit the README adding a description
+4. Push to your fork
+5. Wait an hour and then check [mash.pkgx.sh]
 
 > [!NOTE]
 > Do not create a pull request for your scripts against this repo!
 > *We index the fork graph*.
+
+> [!IMPORTANT]
+> Step 3 (edit the README) is not optional if you want your script to appear
+> on the [mash frontpage][mash.pkgx.sh]!
 
 ### Running Your Scripts
 
@@ -179,23 +185,20 @@ Once indexed your script can be run with:
 > script has been indexed.
 
 > [!NOTE]
-> Categorized scripts occur on a first come first served basis. If you create
-> a script called `foo-bar` and someone already did that then you are too late
-> and users can only call your script with `mash youruser/foo-bar`.
-
-> [!NOTE]
-> Updates are fetched automatically, there is no versioning at this time.
-
-> [!NOTE]
-> Single letter categorizations are ignored, eg `./scripts/f-u` will not be
-> indexed or made available to mash. If you have a particularly good single
-> letter category that you want an exception made, open a discussion and let’s
-> chat!
+> * Categorized scripts occur on a first come first served basis. If you
+>   create a script called `foo-bar` and someone already did that then you are
+>   too late and users can only call your script with `mash youruser/foo-bar`.
+> * Updates are fetched automatically, there is no versioning at this time.
+> * Single letter categorizations are ignored, eg `./scripts/f-u` will not be
+>   indexed or made available to mash. If you have a particularly good single
+>   letter category that you want an exception made, open a discussion and
+>   let’s chat!
 
 > [!INFO]
 > ### Naming Guidelines: A Call for Consideration
 > Think for a little about the names you are picking. We reserve the right
-> to rename egregious abuse of names and namespaces.
+> to rename egregious abuse of names and/or namespaces. If you feel a script
+> is misnamed open a ticket for discussion.
 
 &nbsp;
 
