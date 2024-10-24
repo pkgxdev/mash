@@ -1,4 +1,4 @@
-#!/usr/bin/env -S pkgx deno run --allow-read --allow-write
+#!/usr/bin/env -S pkgx deno^1 run --allow-read --allow-write
 
 import { basename } from "https://deno.land/std@0.206.0/path/mod.ts";
 import * as flags from "https://deno.land/std@0.206.0/flags/mod.ts";

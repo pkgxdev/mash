@@ -1,4 +1,4 @@
-#!/usr/bin/env -S pkgx deno run --allow-run=bash --allow-read=.
+#!/usr/bin/env -S pkgx deno^1 run --allow-run=bash --allow-read=.
 
 import { join, basename, dirname } from "https://deno.land/std@0.206.0/path/mod.ts";
 import { walk, exists } from "https://deno.land/std@0.206.0/fs/mod.ts";
