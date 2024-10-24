@@ -194,7 +194,7 @@ Once indexed your script can be run with:
 >   letter category that you want an exception made, open a discussion and
 >   let’s chat!
 
-> [!INFO]
+> [!NOTE]
 > ### Naming Guidelines: A Call for Consideration
 > Think for a little about the names you are picking. We reserve the right
 > to rename egregious abuse of names and/or namespaces. If you feel a script
