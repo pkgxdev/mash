@@ -14,19 +14,28 @@ mash up millions of open source packages into monstrously powerful scripts.
 
 &nbsp;
 
+## Quick Start
+
+```sh
+brew install pkgxdev/made/mash || curl https://mash.pkgx.sh | sh
+```
+
+> [!NOTE]
+> `mash` is a plain POSIX script. All it needs is `bash`, `curl`, and `pkgx`.
+> So if you like you can just download it by itself.
 
 ## Getting Started
 
 ```sh
 $ mash  # or https://mash.pkgx.sh
-# lists all script categories
+# ^^ lists all script categories
 ```
 
 You can browse script listings with the TUI or at [mash.pkgx.sh]:
 
 ```sh
 $ mash ai  # or https://mash.pkgx.sh/ai/
-# lists all ai scripts
+# ^^ lists all ai scripts
 ```
 
 > [!NOTE]
@@ -37,41 +46,6 @@ Once you’ve found a script you want to run:
 ```sh
 $ mash ai chat --help  # or https://mash.pkgx.sh/ai/chat/
 ```
-
-## Installing `mash`
-
-To install `mash` and `pkgx`:
-
-```sh
-curl https://mash.pkgx.sh | sh
-# ^^ installs /usr/local/bin/mash and  /usr/local/bin/pkgx
-```
-
-If you prefer, you can run `mash` via `pkgx`:
-
-```sh
-$ brew install pkgxdev/made/pkgx  # or curl https://pkgx.sh | sh
-$ pkgx mash
-
-# or install it via pkgx:
-$ pkgx install mash
-$ mash
-```
-
-> [!TIP]
-> * `brew install pkgxdev/made/pkgx`; or
-> * `curl https://pkgx.sh | sh`; or
-> * [docs.pkgx.sh/getting-started](https://docs.pkgx.sh/getting-started)
-
-`mash` is a plain POSIX script. All it needs is `bash`, `curl`, and `pkgx`.
-So if you like you can just download it by itself.
-
-> [!NOTE]
-> Keeping mash so minimal isn’t a concrete design choice. We will entertain
-> rewriting it in something better for dev as it gets more complicated.
->
-> In fact the minimalist nature of `mash` is more a testament to `pkgx`’s
-> powerful and composable packaging primitives.
 
 &nbsp;
 
