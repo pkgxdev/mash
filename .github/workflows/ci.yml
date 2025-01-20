@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pkgxdev/setup@v2
+      - uses: pkgxdev/setup@v3
       - run: ./mash demo test-pattern
       - run: ./mash demo test-pattern           # check cache route works too
       - run: ./mash pkgxdev/demo-test-pattern   # check fully qualified
