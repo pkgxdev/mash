@@ -26,17 +26,8 @@ fi
 if [ $# -gt 0 ]; then
   exec pkgx +pkgx.sh/mash -- mash "$@"
 else
-  pkgx install mash
-
-  if [ -f /usr/bin/which ]; then
-    pkgxd="$(dirname "$(which pkgx)")"
-
-    if [ ! -w "$pkgxd" ]; then
-      SUDO=sudo
-    fi
-
-    $SUDO mv $HOME/.local/bin/mash "$pkgxd"
-  fi
-
+  tmp="$(mktemp)"
+  curl -Ssf https://pkgxdev.github.io/mash/mash.sh > $tmp
+  sudo install -m 0755 "$tmp" /usr/local/bin/mash
   echo "now type: mash" 1>&2
 fi

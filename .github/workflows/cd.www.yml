@@ -1,3 +1,5 @@
+name: cd·www
+
 on:
   push:
     branches: main
@@ -33,6 +35,13 @@ jobs:
         run: |
           mkdir out
           .github/scripts/index.ts --input ./build > ./out/index.json
+
+      - uses: robinraju/release-downloader@v1.11
+        with:
+          latest: true
+          fileName: mash-*.sh
+
+      - run: mv mash-*.sh ./out/mash.sh
 
       - name: build
         run: .github/scripts/build.ts --input ./build --output ./out --index-json ./out/index.json

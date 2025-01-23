@@ -1,3 +1,5 @@
+name: cd·installer
+
 on:
   pull_request:
     paths:
@@ -10,6 +12,7 @@ on:
 
 jobs:
   cd:
+    if: github.repository == 'pkgxdev/mash'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,3 +28,10 @@ jobs:
       - run: aws cloudfront create-invalidation
           --distribution-id ${{ secrets.AWS_CF_DISTRIBUTION_ID }}
           --paths / /installer.sh
+
+  test:
+    needs: cd
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -L mash.pkgx.sh | sh
+      - run: mash demo test-pattern
