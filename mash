@@ -2,6 +2,11 @@
 
 set -eo pipefail
 
+if [ "$1" == --version ]; then
+  echo "mash 0.0.0-dev"
+  exit 0
+fi
+
 if [ -n "$RUNNER_DEBUG" -a -n "$GITHUB_ACTIONS" ] || [ -n "$VERBOSE" ]; then
   set -x
 fi
