@@ -1,6 +1,6 @@
-#!/usr/bin/env -S pkgx +gum +gem bash
+#!/bin/sh
 
-ruby "$0" | gum format
+pkgx mash pkgx/ensure ruby "$0" | pkgx gum format
 exit 0
 
 #!/usr/bin/ruby
@@ -32,6 +32,6 @@ result = []
 find_versions($pkgx_dir, result)
 
 # Output the Markdown table
-puts "| Parent Directory | Version |"
-puts "|------------------|---------|"
+puts "| Project | Version |"
+puts "|---------|---------|"
 puts result.join("\n")
