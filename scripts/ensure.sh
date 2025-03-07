@@ -1,4 +1,4 @@
-#!/usr/bin/env -S pkgx bash>=4 -eo pipefail
+#!/usr/bin/env -S pkgx --quiet bash>=4 -eo pipefail
 
 _main() {
   # check if all args begin with a +
@@ -27,7 +27,7 @@ _main() {
       fi
     done
     if [ ${#_KEEP[@]} -gt 0 ]; then
-      exec pkgx -q "${_KEEP[@]}"
+      exec pkgx --quiet "${_KEEP[@]}"
     fi
   elif _check_arg $1; then
     if [ $1 = python -a $(uname) = Darwin ]; then
@@ -37,7 +37,7 @@ _main() {
       exec "$@"
     fi
   else
-    exec pkgx -q "$@"
+    exec pkgx --quiet "$@"
   fi
 }
 
