@@ -7,14 +7,20 @@ if [ "$#" -gt 1 ]; then
     exit 1
 fi
 
-pkgx +$1 >/dev/null
+pkgx --quiet +$1 >/dev/null
+major_version=$(pkgx --version | cut -d' ' -f2 | cut -d. -f1)
+minor_version=$(pkgx --version | cut -d' ' -f2 | cut -d. -f2)
 
 f=$(mktemp)
 
-cat <<EoSH > "$f"
-#!/bin/sh
-exec pkgx $1 "\$@"
-EoSH
+if ! [ "$major_version" -ge 2 -a "$minor_version" -ge 4 ]; then
+    echo '#!/bin/sh' > "$f"
+    echo "exec pkgx --quiet $1 \"\$@\"" >> "$f"
+elif [ $(uname) = Darwin -a "$(command -v pkgx)" = "/usr/local/bin/pkgx" ]; then
+    echo "#!/usr/local/bin/pkgx -q! $1" > "$f"
+else
+    echo "#!/usr/bin/env -S pkgx -q! $1" > "$f"
+fi
 
 sudo install -m 0755 "$f" /usr/local/bin/$1
 

@@ -9,9 +9,9 @@ shift
 
 case "$cmd" in
 neophile|neophilia|neophiliac)
-  exec pkgx mash "pkgx/upgrade" "$@";;
+  exec pkgx --quiet mash "pkgx/upgrade" "$@";;
 ls|upgrade|prune)
-  exec pkgx mash "pkgx/$cmd" "$@";;
+  exec pkgx --quiet mash "pkgx/$cmd" "$@";;
 --help)
   usage;;
 *)

@@ -1,6 +1,6 @@
-#!/usr/bin/env -S pkgx +deno bash -eo pipefail
+#!/usr/bin/env -S pkgx --quiet +deno bash -eo pipefail
 
-eval "$(pkgx --shellcode)"
+eval "$(pkgx --quiet --shellcode)"
 
 get_parameters() {
   deno run --allow-read --allow-env - <<EoTS
