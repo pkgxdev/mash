@@ -1,8 +1,8 @@
 #!/bin/sh
 
 handler=$(cat <<EoHndlr
-      if [ -t 2 ] && [ \$1 != pkgx ] && pkgx pkgx^1 --silent --provider \$1; then
-        if pkgx gum confirm "^^ run that with \\\`pkgx\\\`?"; then
+      if [ -t 2 ] && [ \$1 != pkgx ] && pkgx --quiet pkgx^1 --silent --provider \$1; then
+        if pkgx --quiet gum confirm "^^ run that with \\\`pkgx\\\`?"; then
           pkgx "\$@"
         else
           return 127

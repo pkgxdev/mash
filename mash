@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env -S pkgx --quiet bash
 
 set -eo pipefail
 
@@ -17,7 +17,7 @@ if ! command -v pkgx >/dev/null; then
 fi
 if ! command -v curl >/dev/null; then
   curl() {
-    pkgx curl "$@"
+    pkgx --quiet curl "$@"
   }
 fi
 
@@ -70,7 +70,7 @@ run() {
 }
 
 if [ -z "$1" ]; then
-  curl -Ssf https://pkgxdev.github.io/mash/ | pkgx jq '.categories[]' --raw-output | sort | uniq
+  curl -Ssf https://pkgxdev.github.io/mash/ | pkgx --quiet jq '.categories[]' --raw-output | sort | uniq
   exit 0
 elif [[ "$1" == *"/"* ]]; then
   # fully quaified name not a category
@@ -79,9 +79,9 @@ elif [[ "$1" == *"/"* ]]; then
   run u/$cmd "$@"
 elif [[ -z "$2" ]]; then
   curl -Ssf https://pkgxdev.github.io/mash/$1/ |
-    pkgx jq -r '.scripts[] | [.cmd, .description] | @tsv' |
+    pkgx --quiet jq -r '.scripts[] | [.cmd, .description] | @tsv' |
     awk 'BEGIN {FS="\t"; print "| Script | Description |"; print "|-|-|"} {printf("| %s | %s |\n", $1, $2)}' |
-    pkgx gum format
+    pkgx --quiet gum format
 else
   cmd=$1/$2
   shift; shift

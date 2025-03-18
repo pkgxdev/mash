@@ -1,4 +1,4 @@
-#!/usr/bin/env -S pkgx deno~1.39 run --unstable -A --ext=ts
+#!/usr/bin/env -S pkgx --quiet deno~1.39 run --unstable -A --ext=ts
 
 import { hooks, semver, SemVer, utils, plumbing, Installation } from "https://deno.land/x/libpkgx@v0.18/mod.ts"
 import { Command } from "https://deno.land/x/cliffy@v1.0.0-rc.3/command/mod.ts"

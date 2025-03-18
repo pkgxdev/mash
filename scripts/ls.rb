@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pkgx mash pkgx/ensure ruby "$0" | pkgx gum format
+pkgx --quiet mash pkgx/ensure ruby "$0" | pkgx --quiet gum format
 exit 0
 
 #!/usr/bin/ruby

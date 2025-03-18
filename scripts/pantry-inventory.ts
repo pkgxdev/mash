@@ -1,4 +1,4 @@
-#!/usr/bin/env -S pkgx deno^1.40 run --ext=ts --allow-net=dist.pkgx.dev --allow-read --allow-env --allow-ffi --unstable-ffi
+#!/usr/bin/env -S pkgx --quiet deno^1.40 run --ext=ts --allow-net=dist.pkgx.dev --allow-read --allow-env --allow-ffi --unstable-ffi
 
 import { hooks, semver } from "https://deno.land/x/libpkgx@v0.18/mod.ts"
 const { usePantry, useInventory } = hooks
