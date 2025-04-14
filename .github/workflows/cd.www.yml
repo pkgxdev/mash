@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pkgxdev/setup@v3
+      - uses: pkgxdev/setup@v4
 
       - name: trawl
         run: .github/scripts/trawl.ts --out ./build
