@@ -7,6 +7,15 @@ if [ "$1" == --version ]; then
   exit 0
 fi
 
+if [ -z "$1" -o "$1" == "--help" ]; then
+  echo "mash <scriptname> [args...]" 1>&2
+  if [ "$1" == "--help" ]; then
+    exit 0
+  else
+    exit 1
+  fi
+fi
+
 if [ -n "$RUNNER_DEBUG" -a -n "$GITHUB_ACTIONS" ] || [ -n "$VERBOSE" ]; then
   set -x
 fi
@@ -66,24 +75,23 @@ run() {
     echo "error: $URL" 1>&2
     exit 2
   fi
-
 }
 
-if [ -z "$1" ]; then
-  curl -Ssf https://pkgxdev.github.io/mash/ | pkgx --quiet jq '.categories[]' --raw-output | sort | uniq
-  exit 0
-elif [[ "$1" == *"/"* ]]; then
-  # fully quaified name not a category
-  cmd=$1
-  shift
-  run u/$cmd "$@"
-elif [[ -z "$2" ]]; then
-  curl -Ssf https://pkgxdev.github.io/mash/$1/ |
-    pkgx --quiet jq -r '.scripts[] | [.cmd, .description] | @tsv' |
-    awk 'BEGIN {FS="\t"; print "| Script | Description |"; print "|-|-|"} {printf("| %s | %s |\n", $1, $2)}' |
-    pkgx --quiet gum format
-else
-  cmd=$1/$2
-  shift; shift
-  run $cmd "$@"
-fi
+cmd=$1
+shift
+
+case "$cmd-$1" in
+tea-erc20|media-yt2mp3|pantry-checker|tmux-sessionizer|demo-test-pattern)
+  cmd="$cmd-$1"
+  shift;;
+*)
+  if [[ "$cmd" == pkgx/* || "$cmd" == pkgxdev/* ]]; then
+    cmd="mxcl/$(basename $cmd)"
+  fi
+
+  if [[ "$cmd" == */* ]]; then
+    cmd="u/$cmd"
+  fi
+esac
+
+run $cmd "$@"

@@ -17,31 +17,17 @@ if (!indir || !outdir || !index_json_path) {
 
 const scripts = JSON.parse(Deno.readTextFileSync(index_json_path)).scripts as Script[]
 
-const categories: Record<string, Script[]> = {}
 const users: Record<string, Script[]> = {}
 
 for (const script of scripts) {
-  if (script.category) {
-    categories[script.category] ??= []
-    categories[script.category].push(script)
-  }
   const user = script.fullname.split('/')[0]
   users[user] ??= []
   users[user].push(script)
 }
 
 // sort each entry in categories and users by the script birthtime
-for (const scripts of Object.values(categories)) {
-  scripts.sort((a, b) => new Date(b.birthtime).getTime() - new Date(a.birthtime).getTime());
-}
 for (const scripts of Object.values(users)) {
   scripts.sort((a, b) => new Date(b.birthtime).getTime() - new Date(a.birthtime).getTime());
-}
-
-for (const category in categories) {
-  const d = outdir.join(category)
-  const scripts = categories[category].filter(({description}) => description)
-  d.mkdir('p').join('index.json').write({ json: { scripts }, force: true, space: 2 })
 }
 
 for (const user in users) {
@@ -53,15 +39,13 @@ for (const user in users) {
 for (const script of scripts) {
   console.error(script)
   const [user, name] = script.fullname.split('/')
-  const { category } = script
   const gh_slug = new URL(script.url).pathname.split('/').slice(1, 3).join('/')
   const infile = indir.join(gh_slug, 'scripts', basename(script.url))
 
   infile.cp({ to: outdir.join('u', user).mkdir('p').join(name) })
 
-  const leaf = name.split('-').slice(1).join('-')
-  if (category && !outdir.join(category, leaf).exists()) { // not already snagged
-    infile.cp({ to: outdir.join(category, leaf) })
+  if (!outdir.join(name).exists() && user != "pkgxdev") { // not already snagged
+    infile.cp({ to: outdir.join(name) })
   }
 }
 

@@ -17,38 +17,23 @@ mash up millions of open source packages into monstrously powerful scripts.
 ## Quick Start
 
 ```sh
-brew install pkgxdev/made/mash || curl https://mash.pkgx.sh | sh
+brew install pkgxdev/made/mash || curl https://pkgx.sh | sh
 ```
 
 > [!NOTE]
 > `mash` is a plain POSIX script. All it needs is `bash`, `curl`, and `pkgx`.
-> So if you like you can just download it by itself.
+> So if you like install the deps and just download it by itself.
 
 ## Getting Started
 
-```sh
-$ mash  # or https://mash.pkgx.sh
-# ^^ lists all script categories
-```
-
-You can browse script listings with the TUI or at [mash.pkgx.sh]:
+Visit [mash.pkgx.sh] to see what scripts are available. Once you’ve found a
+script you want to run:
 
 ```sh
-$ mash ai  # or https://mash.pkgx.sh/ai/
-# ^^ lists all ai scripts
-```
-
-> [!NOTE]
-> The above lists all user submitted scripts in the `ai` category.
-
-Once you’ve found a script you want to run:
-
-```sh
-$ mash ai chat --help  # or https://mash.pkgx.sh/ai/chat/
+mash transcribe --help  # or https://mash.pkgx.sh/mxcl/transcribe
 ```
 
 &nbsp;
-
 
 ## Contributing Scripts
 
@@ -68,24 +53,13 @@ Generally it is sensible to specify constrained versions:
 
 ### Naming Scripts
 
-`mash` operates with a “categorization by default is good” philosophy. Your
-scripts must be categorized or namespaced with your user.
-
-Thus if you add a script named `foo` it can only be used via
-`mash username/foo`. But if you add a script called `foo-bar` if will be
-listed if a user types `mash foo`:
-
-```sh
-$ mash foo
-
-    mash foo bar           # your description about `foo bar` is shown here
-    mash foo other-script  # …
-```
+Names are first-come, first served. Please practice taste. We reserve the
+right to manage names.
 
 > [!TIP]
 > Extensions (eg. `.sh`, `.ts`) are *recommended* for GitHub readability.
 > They will be stripped from the mash execution name, eg. `foo-bar.ts` is
-> invoked via `mash foo bar` and not `mash foo bar.ts`
+> invoked via `mash foo-bar` and not `mash foo-bar.ts`
 
 ### Installing Language Dependencies
 
@@ -143,8 +117,8 @@ available.
 Assuming a script named `foo-bar`, while debugging just:
 
 ```sh
-$ chmod +x scripts/foo-bar
-$ ./scripts/foo-bar
+chmod +x scripts/foo-bar
+./scripts/foo-bar
 ```
 
 After pushing we will index your script within 60 minutes.
@@ -157,16 +131,6 @@ Once indexed your script can be run with:
 > `mash` will not be able to run your script until it is indexed.
 > If you can visit https://mash.pkgx.sh/USERNAME/SCRIPT-NAME then you’re
 > script has been indexed.
-
-> [!NOTE]
-> * Categorized scripts occur on a first come first served basis. If you
->   create a script called `foo-bar` and someone already did that then you are
->   too late and users can only call your script with `mash youruser/foo-bar`.
-> * Updates are fetched automatically, there is no versioning at this time.
-> * Single letter categorizations are ignored, eg `./scripts/f-u` will not be
->   indexed or made available to mash. If you have a particularly good single
->   letter category that you want an exception made, open a discussion and
->   let’s chat!
 
 > [!NOTE]
 > ### Naming Guidelines: A Call for Consideration
@@ -206,8 +170,8 @@ pkg names, just type what you would type to run the command.
 
 ### Documenting Your Script
 
-Rewrite the README in your fork so there is a `## mash category scriptname`
-section. If your script is not globally categorized then you would do
+Rewrite the README in your fork so there is a `## mash scriptname`
+section. If your script is not the first to get a name then you would do
 `## mash username/scriptname` instead.
 
 * The paragraph after the `##` will be the [mash.pkgx.sh] description
@@ -231,15 +195,15 @@ https://github.com/mxcl/mash
 directly via `pkgx`:
 
 ```sh
-$ curl -O https://raw.githubusercontent.com/mxcl/mash/main/scripts/gh-stargazer
-$ pkgx ./gh-stargazer
+curl -O https://raw.githubusercontent.com/mxcl/mash/main/scripts/transcribe
+pkgx ./transcribe
 ```
 
 Even `pkgx` isn’t required, they can source the dependencies themselves and
 run the script manually:
 
 ```sh
-$ bash ./stargazer
+$ bash ./transcribe
 # ^^ they will need to read the script to determine deps and interpreter
 ```
 
@@ -247,7 +211,7 @@ Hackers can use your script without installing `pkgx` or `mash` first via our
 cURL one-liner. This executes the script but doesn’t install anything:
 
 ```sh
-sh <(curl https://mash.pkgx.sh) <category> <scriptname>
+sh <(curl https://mash.pkgx.sh) transcribe
 ```
 
 

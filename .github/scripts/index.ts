@@ -18,24 +18,38 @@ if (import.meta.main) {
   const scripts: Script[] = []
   for await (const slug of iterateGitRepos('.')) {
     console.error(`iterating: ${slug}`);
-    scripts.push(...await get_metadata(slug));
+    for (const script of await get_metadata(slug)) {
+      switch (basename(script.fullname)) {
+        case "cache":
+        case "demo-test-pattern":
+        case "ensure":
+        case "inventory":
+        case "pantry-inventory":
+        case "ls":
+        case "magic":
+        case "prune":
+        case "run":
+        case "stub":
+        case "upgrade":
+        case "cache+prune":
+        case "cache+ls":
+        case "cache+upgrade":
+        case "demo":
+          if (!script.fullname.startsWith("mxcl/")) {
+            // ignore stuff that was forked from when the root repo had scripts
+            // these scripts are now on @mxcl/…
+            continue;
+          }
+          // fallthrough
+        default:
+          scripts.push(script)
+      }
+    }
   }
 
   scripts.sort((a, b) => b.birthtime.getTime() - a.birthtime.getTime());
 
-  const categories = (() => {
-    const categories: Record<string, number> = {}
-    for (const script of scripts) {
-      if (script.category && script.description) {
-        categories[script.category] ??= 0;
-        categories[script.category]++;
-      }
-    }
-    return Object.keys(categories)
-  })();
-
-
-  console.log(JSON.stringify({ scripts, categories }, null, 2));
+  console.log(JSON.stringify({ scripts }, null, 2));
 }
 
 ////////////////////////////////////////////////////////////////////// lib
@@ -45,13 +59,16 @@ async function extractMarkdownSection(filePath: string, sectionTitle: string): P
   let capturing = false;
   let sectionContent = '';
 
-  for (const line of lines) {
-    if (line.startsWith('## ')) {
+  for (let line of lines) {
+    line = line.trim();
+    if (/^##\s+/.test(line)) {
       if (capturing) {
-        break;  // stop if we reach another ## section
-      } else if (normalize_title(line.slice(3)) == normalize_title(sectionTitle)) {
+        break;  // stop if we reach another header section
+      } else if (normalize_title(line.replace(/^#+/, '')) == normalize_title(sectionTitle)) {
         capturing = true;
-      } else if (line.slice(3).trim() == mash_title(sectionTitle)) {
+      } else if (line.replace(/^#+/, '').trim() == mash_title(sectionTitle)) {
+        capturing = true;
+      } else if (line.replace(/^#+/, '').trim() == `\`mash ${sectionTitle}\``) {
         capturing = true;
       }
     } else if (capturing) {
@@ -77,7 +94,6 @@ export interface Script {
   description?: string
   avatar: string
   url: string
-  category?: string
   README?: string
   cmd: string
 }
@@ -123,6 +139,8 @@ async function get_metadata(slug: string) {
         // the file used to exist but has been deleted
         console.warn("skipping deleted: ", filename, line)
         continue
+      } else {
+        console.warn("%cadding: ", 'color:green', filename, line)
       }
 
       const repo_metadata = JSON.parse(await Deno.readTextFile(join(slug, 'metadata.json')))
@@ -133,15 +151,14 @@ async function get_metadata(slug: string) {
       const avatar = repo_metadata.avatar
       const fullname = join(dirname(slug), _stem)
       const url = repo_metadata.url +'/scripts/' + basename(filename)
-      const category = (([x, y]) => x?.length > 0 && y ? x : undefined)(basename(filename).split("-"))
       const description = README
         ? extract_description(README)
         : fullname == 'pkgxdev/demo-test-pattern'
           ? 'Prints a test pattern to your console'
           : undefined
-      const cmd = category ? `mash ${category} ${_stem.split('-').slice(1).join('-')}` : `mash ${fullname}`
+      const cmd = `mash ${_stem}`
 
-      rv.push({ fullname, birthtime, description, avatar, url, category, README, cmd })
+      rv.push({ fullname, birthtime, description, avatar, url, README, cmd })
     }
   }
 
