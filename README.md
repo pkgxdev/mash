@@ -1,6 +1,6 @@
 # `mash`
 
-mash up millions of open source packages into monstrously powerful scripts.
+Mash up millions of open source packages into monstrously powerful scripts.
 
 > [!CAUTION]
 >
@@ -67,6 +67,24 @@ Many languages or interpreters nowadays provide clear methods for importing
 language dependencies inside scripts, eg. `deno`, or `bun`. For other
 languages, read on.
 
+### JavaScript
+
+Use `deno` or `bun`. If you must use `node` then use [`scriptisto`].
+
+#### Rust
+
+```rust
+#!/usr/bin/env -S pkgx rust-script
+
+//! ```cargo
+//! [dependencies]
+//! time = "0.1.25"
+//! ```
+```
+
+> [!TIP]
+> Probably you should specify a more precise Rust version as a plus-pkg arg.
+
 #### Ruby
 
 Use [Bundler](https://bundler.io):
@@ -82,25 +100,52 @@ gemfile do
 end
 ```
 
-#### Python, Go, Rust, Node, etc.
+#### Python
 
-Typically for everything else, use [`scriptisto`], eg for Python:
+Use `uvx`:
 
 ```python
-#!/usr/bin/env -S pkgx +python@3.12 +virtualenv scriptisto
+#!/usr/bin/env -S pkgx +python@3.11 uv run --with requests<=3 --with rich
 
-# snip… type `scriptisto new python-pip` for the rest.
+import requests
+from rich.pretty import pprint
+
+resp = requests.get("https://peps.python.org/api/peps.json")
+data = resp.json()
+pprint([(k, v["title"]) for k, v in data.items()][:10])
+
+```
+
+#### Go, Node, C/C++ etc.
+
+Typically for everything else, use [`scriptisto`], eg for C:
+
+```c
+#!/usr/bin/env pkgx +clang +pkg-config scriptisto
+
+#include <stdio.h>
+#include <glib.h>
+
+// scriptisto-begin
+// script_src: main.c
+// build_cmd: clang -O2 main.c `pkg-config --libs --cflags glib-2.0` -o ./script
+// scriptisto-end
+
+int main(int argc, char *argv[]) {
+  gchar* user = g_getenv("USER");
+  printf("Hello, C! Current user: %s\n", user);
+  return 0;
+}
 ```
 
 Use `scriptisto new` for a full listing of platforms Scriptisto makes
 available.
 
-
 ### Making your scripts available to `mash`
 
 1. Fork [pkgxdev/mash]
 2. Add scripts to `./scripts/`
-3. Optionally edit the README adding a description
+3. Optionally edit the README adding a description for each script
 4. Push to your fork
 5. Wait an hour and then check [mash.pkgx.sh]
 
@@ -129,11 +174,13 @@ Once indexed your script can be run with:
 
 > [!IMPORTANT]
 > `mash` will not be able to run your script until it is indexed.
-> If you can visit https://mash.pkgx.sh/USERNAME/SCRIPT-NAME then you’re
+> If you can visit https://mash.pkgx.sh/USERNAME/SCRIPT-NAME then your
 > script has been indexed.
 
 > [!NOTE]
+>
 > ### Naming Guidelines: A Call for Consideration
+>
 > Think for a little about the names you are picking. We reserve the right
 > to rename egregious abuse of names and/or namespaces. If you feel a script
 > is misnamed open a ticket for discussion.
