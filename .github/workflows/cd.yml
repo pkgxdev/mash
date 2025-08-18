@@ -17,7 +17,7 @@ jobs:
     if: github.repository == 'pkgxdev/mash'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: fischerscode/tagger@v0
         with:
           prefix: v
@@ -29,7 +29,7 @@ jobs:
     if: github.repository == 'pkgxdev/mash'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: version
         run: sed -i "s/mash 0.0.0-dev/mash ${{ github.event.release.tag_name }}/g" ./mash
