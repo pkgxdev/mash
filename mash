@@ -46,13 +46,23 @@ run() {
   fi
 
   get_etag() {
-    grep -i ETag "$CACHE/headers.txt" | sed -e 's/ETag: "\(.*\)"/\1/I' | tr -d '\r'
+    # Swallow error when CACHE does not exist
+    # Always allow even ETAG invalid to not fail pipeline
+    grep -i ETag "$CACHE/headers.txt" 2>/dev/null | sed -e 's/ETag: "\(.*\)"/\1/I' | tr -d '\r' || true
   }
 
-  if [ -f "$CACHE/headers.txt" ] && ETAG=$(get_etag); then
+  ETAG=$(get_etag)
+  # If invalid ETAG but CACHE exists: remove it
+  if [ -z "$ETAG" ] && [ -d "$CACHE" ]; then
+    echo "Cache in bad state; will remove $CACHE"
+    rm -rf "$CACHE"
+  fi
+
+  if [ -f "$CACHE/headers.txt" ] && [ ! -z "$ETAG" ]; then
     ETAG=(--header If-None-Match:\ $ETAG)
   else
     mkdir -p "$CACHE"
+    ETAG=()
   fi
 
   URL="https://pkgxdev.github.io/mash/$SCRIPTNAME"
